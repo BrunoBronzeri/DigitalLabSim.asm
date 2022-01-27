@@ -197,5 +197,3 @@ PROC_main:
 	jal PROC_decremento
 	
 	b PROC_main # reiniciar o programa
-	
-	
