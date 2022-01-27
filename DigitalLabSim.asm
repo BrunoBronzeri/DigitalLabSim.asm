@@ -1,8 +1,8 @@
 # UNIVERSIDADE FEDERAL DE SANTA CATARINA - Campus Blumenau
-# Engenharia de Controle & Automação - Microprocessadores
+# Engenharia de Controle & AutomaÃ§Ã£o - Microprocessadores
 #
-# No digital Lab Sim, o usuário informa dois valores (Hexadecimal) e o programa em pooling faz a contagem
-# regressiva até o zero. E então o mesmo reinicia o processo em looping.
+# No digital Lab Sim, o usuÃ¡rio informa dois valores (Hexadecimal) e o programa em pooling faz a contagem
+# regressiva atÃ© o zero. E entÃ£o o mesmo reinicia o processo em looping.
 #
 # Autores:		Bruno Bueno Bronzeri..........(20204055)
 #			Leonardo dos Santos Schmitt...(20201428)
@@ -14,8 +14,8 @@
 .text
 	j PROC_main
 	
-PROC_lab_sim: # função linkada ao PROC_MAIN que realizar ascender o LED da esquerda e direita
-	addi $sp, $sp, -20 # cria pilha 
+PROC_lab_sim: # funÃ§Ã£o linkada ao PROC_MAIN que realizar ascender o LED da esquerda e direita
+	addi $sp, $sp, -24 # cria pilha 
 	sw $t0, 0($sp) 
 	sw $t1, 4($sp)  
 	sw $t2, 8($sp) 
@@ -23,15 +23,15 @@ PROC_lab_sim: # função linkada ao PROC_MAIN que realizar ascender o LED da esque
 	sw $t4, 16($sp) 
 	sw $t5, 20($sp)
 
-# loop responsável por verificar se há informação de input em alguma linha
+# loop responsÃ¡vel por verificar se hÃ¡ informaÃ§Ã£o de input em alguma linha
 loop_linha:	
 	move $t1, $zero
 	li $t1, 1
 	sb $t1, 0($s4)
 	lb $t0, 0($s5)
-	beqz $t0, continua_loop # continua para laço onde será inserido os valores (2,4,8)
-	beqz $t2, contador_laço # contador que permite a gente controlar quantas vezes a tecla foi digitada
-	bnez $t2, percorre_novo_input # mesma função do 'percorre_input' mas para a segunda tecla selecionada
+	beqz $t0, continua_loop # continua para laÃ§o onde serÃ¡ inserido os valores (2,4,8)
+	beqz $t2, contador_laÃ§o # contador que permite a gente controlar quantas vezes a tecla foi digitada
+	bnez $t2, percorre_novo_input # mesma funÃ§Ã£o do 'percorre_input' mas para a segunda tecla selecionada
 	
 continua_loop:
 	mul $t1, $t1, 2	
@@ -39,27 +39,27 @@ continua_loop:
 	sb $t1, 0($s4)
 	lb $t0, 0($s5)
 	beqz $t0, continua_loop 
-	beqz $t2, contador_laço # contador que permite a gente controlar quantas vezes a tecla foi digitada
+	beqz $t2, contador_laÃ§o # contador que permite a gente controlar quantas vezes a tecla foi digitada
 	bnez $t2, percorre_novo_input
 	
-contador_laço:
+contador_laÃ§o:
 	add $t2, $t2 ,1
 	
-percorre_input:  # verifica a posição no input e realiza uma contagem até alcanaçar o '.data' input 
+percorre_input:  # verifica a posiÃ§Ã£o no input e realiza uma contagem atÃ© alcanaÃ§ar o '.data' input 
 	lb $t3, 0($s0)
 	beq $t0, $t3, acender_led_esquerda # se for igual vai para ascender led esquerda
 	addi $s0, $s0, 2
-	add $t4, $t4, 2 # contador para posição do input análoga ao output
+	add $t4, $t4, 2 # contador para posiÃ§Ã£o do input anÃ¡loga ao output
 	
 	b percorre_input
 	
 acender_led_esquerda:
-	add $s1, $s1, $t4 # soma no '.data' output o análogo '.data' input contado na branch acima
+	add $s1, $s1, $t4 # soma no '.data' output o anÃ¡logo '.data' input contado na branch acima
 	lb $t5, 0($s1)
 	sb $t5, 0($s2) # mostra no led da esquerda a 1a tecla selecionada
-	sub $s1, $s1, $t4 # diminui para o endereço inicial no '.data output'
-	sub $s0, $s0 ,$t4 # diminui para o endereço inicial '.data input'
-	move $t3, $zero # zera a referência que aponta para o input
+	sub $s1, $s1, $t4 # diminui para o endereÃ§o inicial no '.data output'
+	sub $s0, $s0 ,$t4 # diminui para o endereÃ§o inicial '.data input'
+	move $t3, $zero # zera a referÃªncia que aponta para o input
 	move $t4, $zero # zera o contador
 	
 next_key: # zera t0 e espera a proxima tecla
@@ -73,34 +73,34 @@ percorre_novo_input:
 	lb $t3, 0($s0)
 	beq $t0, $t3, acender_led_direita # se for igual vai para acender led direita
 	addi $s0, $s0, 2
-	add $t4, $t4, 2 # contador para posição do input análoga ao output
+	add $t4, $t4, 2 # contador para posiÃ§Ã£o do input anÃ¡loga ao output
 	
 	b percorre_novo_input
 	
 acender_led_direita:
-	add $s1, $s1, $t4 # soma a posição do input para percorrer o output
+	add $s1, $s1, $t4 # soma a posiÃ§Ã£o do input para percorrer o output
 	lb $t5, 0($s1)
-	sb $t5, 0($s3) # mostra no led da direita e temos a primeira vitória 
+	sb $t5, 0($s3) # mostra no led da direita e temos a primeira vitÃ³ria 
 
-zera_t0: # zera t0 e aguarda até que a tecla não esteja mais selecionada
+zera_t0: # zera t0 e aguarda atÃ© que a tecla nÃ£o esteja mais selecionada
 	mul $t0, $t0, 0
 	sb $t1, 0($s4)
 	lb $t0, 0($s5)
 	bnez $t0, zera_t0
 	
 end_lab_sim:
-	addi $sp, $sp, 20 # carrega a pilha 
 	lw $t0, 0($sp)
 	lw $t1, 4($sp)  
 	lw $t2, 8($sp) 
 	lw $t3, 12($sp) 
 	lw $t4, 16($sp) 
 	lw $t5, 20($sp)
+	addi $sp, $sp, 24 # carrega a pilha 
 	
-	jr $ra # retorna ao ponto no qual a função foi chamada
+	jr $ra # retorna ao ponto no qual a funÃ§Ã£o foi chamada
 	
-PROC_decremento: # decrementa os valores do led até zerá-lo por completo
-	addi $sp, $sp, -20 # cria outra pilha
+PROC_decremento: # decrementa os valores do led atÃ© zerÃ¡-lo por completo
+	addi $sp, $sp, -24 # cria outra pilha
 	sw $t0, 0($sp) 
 	sw $t1, 4($sp)  
 	sw $t2, 8($sp) 
@@ -111,7 +111,7 @@ PROC_decremento: # decrementa os valores do led até zerá-lo por completo
 	lb $t0, 0($s3) # carrega em t0 o valor referente ao led da direita
 	lb $t1, 0($s2) # carrega em t1 o valor referente ao led da esquerda
 	
-while_not_zeroR: # função de decrementar o led da direita até 0
+while_not_zeroR: # funÃ§Ã£o de decrementar o led da direita atÃ© 0
 	sub $s1, $s1, 2
 	lb $t0, 0($s1)
 	sb $t0, 0($s3)
@@ -119,30 +119,30 @@ while_not_zeroR: # função de decrementar o led da direita até 0
 	li $v0 32
 	syscall
 	
-	bne $t0, 0x3F, while_not_zeroR # retorna a branch até zerar o lado da direita
+	bne $t0, 0x3F, while_not_zeroR # retorna a branch atÃ© zerar o lado da direita
 	
-contador_output: # função de fazer o s1 ir para a posição do led da esquerda
+contador_output: # funÃ§Ã£o de fazer o s1 ir para a posiÃ§Ã£o do led da esquerda
 	lb $t3, 0($s1)
 	beq $t1, $t3, while_not_zeroL
 	addi $s1, $s1, 2 
 
 	b contador_output
 	
-while_not_zeroL: # decrementa em uma unidade na esquerda por ciclo completo da direita, até ambos zerarem
+while_not_zeroL: # decrementa em uma unidade na esquerda por ciclo completo da direita, atÃ© ambos zerarem
 	sub $s1, $s1, 2
 	lb $t1, 0($s1)
 	
 	beq $t1, 0xFFFFFF88, end_decremento # quando t1 for igual a 2^32, branch para fim do procedimento
 	
-	li $a0, 350 # sleep do programa por 350 milisec. para Run speed at max
+	li $a0, 100 # sleep do programa por 100 milisec. para Run speed at max
 	li $v0 32
 	syscall
 	
 	sb $t1, 0($s2) # salva t1 em s2 para mostrar o valor decrementado no led da esquerda
 	
-counter_last_data: # contador até o último '.data' output, para segundo ciclo no led da direita 
+counter_last_data: # contador atÃ© o Ãºltimo '.data' output, para segundo ciclo no led da direita 
 	lb $t4, 0($s1)
-	beq $t4, 0x71, last_hexa # se t4 for igual ao último '.data' output, branch printar 'F' (0x71)
+	beq $t4, 0x71, last_hexa # se t4 for igual ao Ãºltimo '.data' output, branch printar 'F' (0x71)
 	addi $s1, $s1, 2 
 
 	b counter_last_data
@@ -155,9 +155,9 @@ last_hexa:
 	li $v0 32
 	syscall
 	
-	beq $t2, 0x71, while_not_zeroR # retorna ao cilo decremento de 'F' à '0' na direita
+	beq $t2, 0x71, while_not_zeroR # retorna ao cilo decremento de 'F' Ã  '0' na direita
 	
-end_decremento: # encerra o decremento com um beep e restaura a pilha para poder reiniciar do início, 2a vitória!
+end_decremento: # encerra o decremento com um beep e restaura a pilha para poder reiniciar do inÃ­cio, 2a vitÃ³ria!
 
 	li $a0, 67 # tone
 	li $a1, 1000 # time
@@ -173,15 +173,15 @@ end_decremento: # encerra o decremento com um beep e restaura a pilha para poder
 	sb $t5, 0($s2) # salva o valor de t5 -> (zero) no led da esquerda
 	sb $t5, 0($s3) # salva o valor de t5 -> (zero) no led da direita
 		
-	addi $sp, $sp, 20 # restaura pilha 
 	lw $t0, 0($sp) 
 	lw $t1, 4($sp)  
 	lw $t2, 8($sp) 
 	lw $t3, 12($sp) 
 	lw $t4, 16($sp) 
 	lw $t5, 20($sp)	
+	addi $sp, $sp, 24 # restaura pilha 
 	
-	jr $ra # retorna para o ponto no qual a função foi chamada
+	jr $ra # retorna para o ponto no qual a funÃ§Ã£o foi chamada
 			
 # PROGRAMA PRINCIPAL 
 PROC_main:
@@ -197,4 +197,5 @@ PROC_main:
 	jal PROC_decremento
 	
 	b PROC_main # reiniciar o programa
+	
 	
