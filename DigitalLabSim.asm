@@ -39,10 +39,10 @@ continua_loop:
 	sb $t1, 0($s4)
 	lb $t0, 0($s5)
 	beqz $t0, continua_loop 
-	beqz $t2, contador_laço # contador que permite a gente controlar quantas vezes a tecla foi digitada
+	beqz $t2, branch_counter # contador que permite a gente controlar quantas vezes a tecla foi digitada
 	bnez $t2, percorre_novo_input
 	
-contador_laço:
+branch_counter:
 	add $t2, $t2 ,1
 	
 percorre_input:  # verifica a posição no input e realiza uma contagem até alcanaçar o '.data' input 
